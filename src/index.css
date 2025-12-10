@@ -1,0 +1,294 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  :host,
+  :root {
+    --background: 230 20% 95%;
+    --foreground: 236 100% 39%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 236 100% 39%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 236 100% 39%;
+
+    --primary: 236 100% 39%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 228 14% 93%;
+    --secondary-foreground: 236 100% 39%;
+
+    --muted: 228 14% 93%;
+    --muted-foreground: 236 100% 39%;
+
+    --accent: 4 100% 68%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 4 100% 68%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 228 14% 85%;
+    --input: 228 14% 85%;
+    --ring: 236 100% 39%;
+
+    --radius: 1rem;
+
+    /* Custom Colors */
+    --blue: 236 100% 39%;
+    --blue-light: 236 100% 55%;
+    --coral: 4 100% 68%;
+    --coral-light: 4 100% 78%;
+    --white: 0 0% 100%;
+    --gray: 228 14% 93%;
+    --gray-dark: 228 14% 70%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(236 100% 39%) 0%, hsl(236 100% 55%) 100%);
+    --gradient-coral: linear-gradient(135deg, hsl(4 100% 68%) 0%, hsl(4 100% 55%) 100%);
+    --gradient-mixed: linear-gradient(135deg, hsl(236 100% 39%) 0%, hsl(4 100% 68%) 100%);
+    --gradient-light: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(228 14% 93%) 100%);
+
+    /* Shadows */
+    --shadow-glow: 0 0 60px hsl(236 100% 39% / 0.2);
+    --shadow-glow-strong: 0 0 100px hsl(236 100% 39% / 0.3);
+    --shadow-coral: 0 0 60px hsl(4 100% 68% / 0.3);
+  }
+
+  .dark {
+    --background: 236 100% 39%;
+    --foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: "Raleway", sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #0000c8;
+    background-clip: text;
+  }
+
+  .text-gradient-coral {
+    background: var(--gradient-coral);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #0000c8;
+    background-clip: text;
+  }
+
+  .text-gradient-mixed {
+    background: var(--gradient-mixed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #0000c8;
+    background-clip: text;
+  }
+
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-coral {
+    background: var(--gradient-coral);
+  }
+
+  .bg-gradient-mixed {
+    background: var(--gradient-mixed);
+  }
+
+  .bg-gradient-light {
+    background: var(--gradient-light);
+  }
+
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-strong {
+    box-shadow: var(--shadow-glow-strong);
+  }
+
+  .glow-coral {
+    box-shadow: var(--shadow-coral);
+  }
+}
+
+/* Animations */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsl(236 100% 39% / 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 40px hsl(236 100% 39% / 0.4);
+  }
+}
+
+@keyframes pulse-glow-coral {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsl(4 100% 68% / 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px hsl(4 100% 68% / 0.5);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes progress {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow-coral {
+  animation: pulse-glow-coral 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-count-up {
+  animation: count-up 0.5s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, hsl(236 100% 39% / 0.2) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Staggered animations */
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+
+.stagger-6 {
+  animation-delay: 0.6s;
+}
