@@ -14,12 +14,12 @@ const generateOptions = (correctValue: number) => {
 
 const QuizMessages = ({ data }: { data?: any }) => {
   if (!data) return null;
-  const correctValue = data.interactions.mensagensTrocadas;
+  const correctValue = data.interactions.chatsIniciadosEmpresa;
   const options = useMemo(() => generateOptions(correctValue), [correctValue]);
 
   return (
     <StoryQuiz
-      question="Quantas mensagens você acredita que enviaram e receberam este ano?"
+      question="Quantos chats você acredita que iniciaram (conversa ativa) este ano?"
       options={options}
       successMessage="Parabéns! Você acertou em cheio"
     />

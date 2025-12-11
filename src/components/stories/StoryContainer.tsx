@@ -14,26 +14,27 @@ import QuizAudios from "./slides/quizzes/QuizAudios";
 import QuizTopCollaborator from "./slides/quizzes/QuizTopCollaborator";
 import QuizConnectedTime from "./slides/quizzes/QuizConnectedTime";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import logoImg from "@/assets/logo-poli.png";
+import logoImg from "@/assets/logo-poli.png"
+import useFetchUserData from "@/api/useFetchUsersData";
 
 const closeWidget = () => {
   // Send message to parent window to close the widget
   window.parent.postMessage({ type: "CLOSE_RETROSPECTIVE" }, "*");
 };
 
-const STORY_DURATION = 8000; // 8 seconds per story
+const STORY_DURATION = 15000; // 15 seconds per story
 
 const stories = [
   StoryOpening,         // 1 - Abertura
-  QuizMessages,         // 2 - Quiz: Mensagens
-  QuizContacts,         // 3 - Quiz: Contatos
-  StoryInteractions,    // 4 - Interações
-  QuizAudios,           // 5 - Quiz: Áudios
+  StoryInteractions,    // 2 - Interações
+//QuizContacts,         // 4 - Quiz: Contatos
   StoryReceptiveStats,  // 6 - Stats Receptivos
-  QuizTopCollaborator,  // 7 - Quiz: Top Colaborador
+  //QuizTopCollaborator,  // 7 - Quiz: Top Colaborador
+  QuizAudios,           // 5 - Quiz: chats do usuário
   StoryRanking,         // 8 - Top Colaboradores
-  QuizConnectedTime,    // 9 - Quiz: Tempo Conectado
-  StoryConnectedTime,   // 10 - Tempo Conectado
+  // QuizConnectedTime,    // 9 - Quiz: Tempo Conectado
+  // StoryConnectedTime,   // 10 - Tempo Conectado
+  QuizMessages,         // 3 - Quiz: mensangens enviadas
   StoryClosing,         // 11 - Encerramento
 ];
 
@@ -43,8 +44,14 @@ const StoryContainer = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const [searchParams] = useSearchParams();
-  const customerId = searchParams.get("id") ? parseInt(searchParams.get("id")!) : 1;
+  const customerId = searchParams.get("id") ? parseInt(searchParams.get("id")!) : undefined;
+  // Pega o userId da URL ou usa undefined para ativar o default do hook
+  const userId = searchParams.get("userId") ? parseInt(searchParams.get("userId")!) : undefined;
+
   const { clientData, loading, error } = useFetchEmpresaData(customerId);
+  // Usa o userId aqui, não o customerId
+  const { clientData: userData, loading: userLoading, error: userError } = useFetchUserData(userId);
+
 
   const goToNext = useCallback(() => {
     if (currentStory < stories.length - 1) {
@@ -170,7 +177,16 @@ const StoryContainer = () => {
               </button>
             </div>
           ) : (
-            clientData && <CurrentStoryComponent key={currentStory} data={clientData} />
+            (clientData || userData) && (
+              <CurrentStoryComponent
+                key={currentStory}
+                data={
+                  [QuizAudios, StoryRanking, StoryConnectedTime, QuizTopCollaborator, QuizConnectedTime].includes(CurrentStoryComponent)
+                    ? userData
+                    : clientData
+                }
+              />
+            )
           )}
         </div>
       </div>

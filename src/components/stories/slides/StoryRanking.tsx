@@ -7,9 +7,9 @@ const StoryRanking = ({ data }: { data?: any }) => {
   // Adapt single user ranking to list format expected by UI
   const topCollaborators = [
     {
-      name: data.ranking?.userName || "Usuário",
-      totalChats: data.ranking?.userChats || 0,
-      avgPerMonth: 0, // Not provided by API
+      name: data.userYourself?.userName || "Usuário",
+      totalChats: data.userYourself?.userChats || 0,
+      avgPerMonth: data.userYourself?.userMedia || 0,
       position: 1
     }
   ];
@@ -55,7 +55,7 @@ const StoryRanking = ({ data }: { data?: any }) => {
       {/* Headline */}
       <div className="animate-fade-up opacity-0 stagger-2">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-          Eles fizeram história!
+          Você fez história!
         </h2>
       </div>
 
@@ -118,7 +118,7 @@ const StoryRanking = ({ data }: { data?: any }) => {
         style={{ animationDelay: "0.8s" }}
       >
         <p className="text-lg text-muted-foreground">
-          Eles carregaram a coroa do atendimento{" "}
+          Você carregou a coroa do atendimento{" "}
           <span className="text-2xl">👑</span>
         </p>
       </div>

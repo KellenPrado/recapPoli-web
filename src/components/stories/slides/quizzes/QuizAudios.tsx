@@ -14,12 +14,12 @@ const generateOptions = (correctValue: number) => {
 
 const QuizAudios = ({ data }: { data?: any }) => {
   if (!data) return null;
-  const correctValue = data.speed.audiosRecebidos;
+  const correctValue = data.userYourself.userChats;
   const options = useMemo(() => generateOptions(correctValue), [correctValue]);
 
   return (
     <StoryQuiz
-      question="Quantos áudios acreditam ter recebido este ano?"
+      question="Quantos chats você acredita ter atendido este ano?"
       options={options}
       successMessage="Parabéns! Mandou bem"
     />

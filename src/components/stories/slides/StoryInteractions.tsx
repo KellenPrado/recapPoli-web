@@ -8,7 +8,7 @@ const StoryInteractions = ({ data }: { data?: any }) => {
   const stats: StatItem[] = sortStatsDescending([
     { icon: MessageCircle, label: "Mensagens Trocadas", value: data.interactions.mensagensTrocadas },
     { icon: Mic, label: "Áudios Enviados", value: data.interactions.audiosEnviados },
-    { icon: MessagesSquare, label: "Chats iniciados pela Empresa (ativos)", value: data.interactions.chatsIniciadosEmpresa },
+//    { icon: MessagesSquare, label: "Chats iniciados pela Empresa (ativos)", value: data.interactions.chatsIniciadosEmpresa },
     { icon: Users, label: "Contatos Atendidos", value: data.interactions.contatosAtendidos },
     { icon: Send, label: "Chats iniciados pelo Disparador", value: data.interactions.chatsIniciadosDisparador },
   ]);
