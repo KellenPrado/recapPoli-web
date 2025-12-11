@@ -36,7 +36,6 @@ const useFetchUserData = (user_id = 331) => {
           .eq('id', user_id) // O filtro WHERE id = user_id
           .limit(1) // Otimização: se espera apenas 1 item
           .single(); // Retorna um objeto único ou null, em vez de um array
-        console.log(userDataArray);
         // B. TRATAMENTO DE ERROS DO SUPABASE
         if (supabaseError && supabaseError.code !== 'PGRST116') { // PGRST116 é 'nenhuma linha encontrada' com .single()
           throw supabaseError;
@@ -45,7 +44,6 @@ const useFetchUserData = (user_id = 331) => {
         // C. TRATAMENTO DE DADOS RETORNADOS
         // Quando usamos .single(), o resultado (data) é o objeto diretamente ou null
         const userData = userDataArray; // Se .single() for usado e retornar dado
-        console.log(userDataArray);
 
         if (!userData) {
           // Se a busca com .single() retornar null, o dado não foi encontrado
