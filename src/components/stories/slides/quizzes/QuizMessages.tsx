@@ -19,7 +19,7 @@ const QuizMessages = ({ data }: { data?: any }) => {
 
   return (
     <StoryQuiz
-      question="Quantos chats você acredita que iniciaram (conversa ativa) este ano?"
+      question="Quantos chats você acredita que a empresa iniciou (conversa ativa) este ano?"
       options={options}
       successMessage="Parabéns! Você acertou em cheio"
     />

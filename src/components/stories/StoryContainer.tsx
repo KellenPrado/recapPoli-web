@@ -20,6 +20,11 @@ import useFetchUserData from "@/api/useFetchUsersData";
 const closeWidget = () => {
   // Send message to parent window to close the widget
   window.parent.postMessage({ type: "CLOSE_RETROSPECTIVE" }, "*");
+
+  // Close the widget via global API if available
+  if (window.RecapPoli) {
+    window.RecapPoli.close();
+  }
 };
 
 const STORY_DURATION = 15000; // 15 seconds per story
@@ -27,7 +32,7 @@ const STORY_DURATION = 15000; // 15 seconds per story
 const stories = [
   StoryOpening,         // 1 - Abertura
   StoryInteractions,    // 2 - Interações
-//QuizContacts,         // 4 - Quiz: Contatos
+  //QuizContacts,         // 4 - Quiz: Contatos
   StoryReceptiveStats,  // 6 - Stats Receptivos
   //QuizTopCollaborator,  // 7 - Quiz: Top Colaborador
   QuizAudios,           // 5 - Quiz: chats do usuário
@@ -38,15 +43,20 @@ const stories = [
   StoryClosing,         // 11 - Encerramento
 ];
 
-const StoryContainer = () => {
+interface StoryContainerProps {
+  id?: number;
+  userId?: number;
+}
+
+const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
   const [currentStory, setCurrentStory] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const [searchParams] = useSearchParams();
-  const customerId = searchParams.get("id") ? parseInt(searchParams.get("id")!) : undefined;
+  const customerId = id || (searchParams.get("id") ? parseInt(searchParams.get("id")!) : undefined);
   // Pega o userId da URL ou usa undefined para ativar o default do hook
-  const userId = searchParams.get("userId") ? parseInt(searchParams.get("userId")!) : undefined;
+  const userId = propUserId || (searchParams.get("userId") ? parseInt(searchParams.get("userId")!) : undefined);
 
   const { clientData, loading, error } = useFetchEmpresaData(customerId);
   // Usa o userId aqui, não o customerId
