@@ -74,4 +74,5 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  publicDir: false, // Prevent copying public folder to avoid recursive dist
 }));

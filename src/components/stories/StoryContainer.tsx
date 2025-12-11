@@ -171,7 +171,7 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="w-full max-w-lg mx-auto px-6 py-20">
+        <div className="w-full max-w-lg mx-auto px-12 py-20">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -202,7 +202,7 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
       </div>
 
       {/* Navigation arrows (desktop) */}
-      <div className="hidden md:flex absolute inset-y-0 left-4 items-center z-10">
+      <div className="hidden md:flex absolute inset-y-0 left-2 items-center z-10">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -215,7 +215,7 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
         </button>
       </div>
 
-      <div className="hidden md:flex absolute inset-y-0 right-4 items-center z-10">
+      <div className="hidden md:flex absolute inset-y-0 right-2 items-center z-10">
         <button
           onClick={(e) => {
             e.stopPropagation();

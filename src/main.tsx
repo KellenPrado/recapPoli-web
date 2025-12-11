@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import r2wc from "@r2wc/react-to-web-component";
 import App from "./App.tsx";
 import indexStyle from "./index.css?inline";
-import { MessageCircleHeart } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 declare global {
   interface Window {
@@ -49,7 +49,7 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
             {/* Backdrop click to close (optional, maybe just on the side for desktop) */}
             <div className="absolute inset-0" onClick={() => setIsOpen(false)} />
 
-            <div className="relative w-full h-full sm:max-w-[400px] sm:border-l sm:shadow-2xl bg-background z-10 animate-in slide-in-from-bottom sm:slide-in-from-right duration-300">
+            <div className="relative w-full h-full sm:max-w-[450px] sm:border-l sm:shadow-2xl bg-background z-10 animate-in slide-in-from-bottom sm:slide-in-from-right duration-300">
               <App id={parsedId} userId={parsedUserId} />
             </div>
           </div>
@@ -65,7 +65,7 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
             }}
             aria-label="Abrir Retrospectiva"
           >
-            <MessageCircleHeart className="w-8 h-8 text-white animate-pulse" />
+            <Sparkles className="w-8 h-8 text-white animate-pulse" />
             <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
         )}

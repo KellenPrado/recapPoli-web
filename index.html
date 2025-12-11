@@ -21,11 +21,15 @@
 </head>
 
 <body>
-<!-- Importe o script -->
-<script src="https://recap-poli-web-b7pm.vercel.app/dist/assets/recap-widget.js" async></script>
+  <!-- Importe o script -->
+  <!-- Local Dev (uncomment to test locally) -->
+  <script type="module" src="/src/main.tsx"></script>
 
-<!-- Adicione o widget onde quiser -->
-<recap-poli-widget></recap-poli-widget>
+  <!-- Production (update URL after deployment if needed) -->
+  <!-- <script src="https://recap-poli-web-b7pm.vercel.app/recap-widget.js" async></script> -->
+
+  <!-- Adicione o widget onde quiser -->
+  <recap-poli-widget></recap-poli-widget>
 
 
 </body>
