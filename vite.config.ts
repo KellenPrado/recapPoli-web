@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => ({
   // Seção 'build' para fixar o nome do arquivo
   build: {
     outDir: 'dist', // Pasta de saída
+    assetsInlineLimit: 102400, // Inline assets up to 100kb (covers logo)
     rollupOptions: {
       output: {
         // Define o nome de arquivo fixo para o chunk principal
