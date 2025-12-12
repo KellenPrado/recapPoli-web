@@ -1,27 +1,41 @@
 import { useState } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 
-const saveFeedback = (liked: boolean) => {
-  // Send feedback to parent window
+const saveFeedback = (liked: boolean, id?: number, userId?: number) => {
+  const feedbackAt = new Date().toISOString();
+
+  // Send feedback to parent window with context
   window.parent.postMessage(
     {
       type: "RETROSPECTIVE_FEEDBACK",
       liked,
+      customerId: id,
+      userId: userId,
+      feedbackAt,
     },
     "*",
   );
+
+  // Store last feedback on global for quick retrieval
+  (window as any).RecapPoli = (window as any).RecapPoli || {};
+  (window as any).RecapPoli.lastFeedback = { liked, feedbackAt };
 
   // Log for debugging
   console.log("Feedback saved:", liked ? "Gostou" : "Não gostou");
 };
 
-const StoryFeedback = () => {
+interface StoryFeedbackProps {
+  id?: number;
+  userId?: number;
+}
+
+const StoryFeedback = ({ id, userId }: StoryFeedbackProps) => {
   const [selected, setSelected] = useState<"up" | "down" | null>(null);
 
   const handleSelect = (choice: "up" | "down") => {
     if (selected) return; // Prevent changing answer
     setSelected(choice);
-    saveFeedback(choice === "up");
+    saveFeedback(choice === "up", id, userId);
   };
 
   return (
