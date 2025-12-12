@@ -66,8 +66,7 @@ const useFetchUserData = (user_id = 331) => {
         setClientData(transformedData);
 
       } catch (err) {
-        // Captura erros do Supabase
-        console.error("Erro ao buscar dados com Supabase Client:", err.message || err.toString());
+        // Captura erros do Supabase (console.error removido para produção)
         setError(err.message || "Ocorreu um erro ao conectar com o Supabase.");
         setClientData(null);
       } finally {

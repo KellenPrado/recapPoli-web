@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import r2wc from "@r2wc/react-to-web-component";
 import App from "./App.tsx";
 import indexStyle from "./index.css?inline";
@@ -35,6 +36,21 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
     };
   }, []);
 
+  // Backdrop component that will be rendered outside Shadow DOM
+  const backdropElement = isOpen ? createPortal(
+    <div
+      style={{
+        position: 'fixed',
+        inset: '0',
+        zIndex: '9998',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+      }}
+      onClick={() => setIsOpen(false)}
+    />,
+    document.body
+  ) : null;
+
   return (
     <>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,14 +58,14 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
       <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       <style>{indexStyle}</style>
 
+      {/* Render backdrop outside Shadow DOM using Portal */}
+      {backdropElement}
+
       <div className="antialiased font-sans">
         {/* Widget Overlay (Open State) */}
         {isOpen && (
-          <div className="fixed inset-0 z-[9999] backdrop-blur-md flex items-end sm:items-stretch sm:justify-end">
-            {/* Backdrop click to close */}
-            <div className="absolute inset-0" onClick={() => setIsOpen(false)} />
-
-            <div className="relative w-full h-[90vh] sm:h-full sm:max-w-[450px] bg-background rounded-t-3xl sm:rounded-none shadow-2xl overflow-hidden animate-in slide-in-from-bottom sm:slide-in-from-right duration-300 z-10">
+          <div className="fixed inset-0 z-[9999] flex items-end sm:items-stretch sm:justify-end pointer-events-none">
+            <div className="relative w-full h-[90vh] sm:h-full sm:max-w-[450px] bg-background rounded-t-3xl sm:rounded-none shadow-2xl overflow-hidden animate-in slide-in-from-bottom sm:slide-in-from-right duration-300 pointer-events-auto">
               <App id={parsedId} userId={parsedUserId} />
             </div>
           </div>
@@ -75,7 +91,7 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
 };
 
 const WebComponent = r2wc(Widget, {
-  shadow: undefined, // Disable shadow DOM to allow backdrop-blur to work
+  shadow: "open", // Re-enable shadow DOM - required for r2wc to work properly
   props: {
     "customer-id": "string",
     "user-id": "string"
