@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RecapPoli Widget - Exemplo de Uso</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0.5rem;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎉 RecapPoli Widget - Exemplo de Uso</h1>
+
+        <p>Este é um exemplo de como embedar o widget RecapPoli em qualquer site.</p>
+
+        <h2>📦 Instalação</h2>
+        <p>Adicione o seguinte código ao seu HTML:</p>
+
+        <div class="code-block">
+            <code>
+&lt;!-- Carregue o script do widget --&gt;<br>
+&lt;script src="https://recap-poli-web-b7pm.vercel.app/recap-widget.js" async&gt;&lt;/script&gt;<br>
+<br>
+&lt;!-- Adicione o widget onde quiser --&gt;<br>
+&lt;recap-poli-widget customer-id="1" user-id="1"&gt;&lt;/recap-poli-widget&gt;
+      </code>
+        </div>
+
+        <h2>🎮 Controle via JavaScript</h2>
+        <p>Você também pode controlar o widget programaticamente:</p>
+
+        <div class="code-block">
+            <code>
+// Abrir o widget<br>
+window.RecapPoli.open({ customerId: 1, userId: 1 });<br>
+<br>
+// Fechar o widget<br>
+window.RecapPoli.close();<br>
+<br>
+// Toggle (abrir/fechar)<br>
+window.RecapPoli.toggle();
+      </code>
+        </div>
+
+        <h2>🧪 Teste Aqui</h2>
+        <p>Clique nos botões abaixo para testar o widget:</p>
+
+        <button class="button" onclick="window.RecapPoli.open({ customerId: 1, userId: 1 })">
+            Abrir Widget
+        </button>
+
+        <button class="button" onclick="window.RecapPoli.close()">
+            Fechar Widget
+        </button>
+
+        <button class="button" onclick="window.RecapPoli.toggle()">
+            Toggle Widget
+        </button>
+    </div>
+
+    <!-- Carregue o script do widget -->
+    <script src="https://recap-poli-web-b7pm.vercel.app/recap-widget.js" async></script>
+
+    <!-- Adicione o widget (ele aparecerá como um botão flutuante) -->
+    <recap-poli-widget customer-id="1" user-id="1"></recap-poli-widget>
+</body>
+
+</html>
