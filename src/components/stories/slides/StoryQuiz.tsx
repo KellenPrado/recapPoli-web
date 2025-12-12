@@ -57,10 +57,10 @@ const StoryQuiz = ({ question, options, successMessage, failMessage = "Não foi 
   const isCorrect = selectedIndex !== null && options[selectedIndex]?.isCorrect;
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-4 md:space-y-6 w-full max-w-2xl">
+    <div className="flex flex-col items-center justify-center text-center space-y-2 md:space-y-3 w-full max-w-2xl">
       {/* Question */}
       <div className="animate-fade-up opacity-0 w-full">
-        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2 break-words whitespace-pre-line max-w-2xl mx-auto">
           {question}
         </h2>
         <div className="h-1 w-20 bg-gradient-primary rounded-full mx-auto mb-4" />
@@ -70,7 +70,7 @@ const StoryQuiz = ({ question, options, successMessage, failMessage = "Não foi 
       </div>
 
       {/* Radio Options */}
-      <div className="space-y-3 w-full">
+      <div className="space-y-1.5 w-full">
         {options.map((option, index) => {
           const isSelected = selectedIndex === index;
           const isCorrectOption = option.isCorrect;

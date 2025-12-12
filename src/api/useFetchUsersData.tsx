@@ -17,13 +17,18 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Nota: O seu código original buscava a mesma tabela (empresa) duas vezes,
 // uma para 'customer_id' e outra para 'userId'. Para simplificar, 
 // a busca principal continua focada na 'empresa' pelo 'customer_id'.
-const useFetchUserData = (user_id = 331) => {
+const useFetchUserData = (user_id?: number) => {
   const [clientData, setClientData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (user_id == null) {
+        setClientData(null);
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       setError(null);
 
@@ -75,7 +80,7 @@ const useFetchUserData = (user_id = 331) => {
     };
 
     fetchData();
-    // Reexecuta se o customer_id mudar
+    // Reexecuta se o user_id mudar
   }, [user_id]);
   // O retorno é o mesmo
   return { clientData, loading, error };

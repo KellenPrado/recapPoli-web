@@ -41,7 +41,7 @@ const StoryRanking = ({ data }: { data?: any }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-6">
+    <div className="flex flex-col items-center justify-center text-center space-y-1.5">
       {/* Icon */}
       <div className="animate-fade-up opacity-0">
         <div className="relative">
@@ -72,7 +72,7 @@ const StoryRanking = ({ data }: { data?: any }) => {
       </div>
 
       {/* Ranking */}
-      <div className="space-y-3 w-full">
+      <div className="space-y-1.5 w-full">
         {topCollaborators.map((collab, index) => (
           <div
             key={collab.name}

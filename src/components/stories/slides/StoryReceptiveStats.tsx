@@ -20,7 +20,7 @@ const StoryReceptiveStats = ({ data }: { data?: any }) => {
   ]);
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-6 md:space-y-8">
+    <div className="flex flex-col items-center justify-center text-center space-y-1.5">
       {/* Headline */}
       <div className="animate-fade-up opacity-0">
         <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
@@ -30,7 +30,7 @@ const StoryReceptiveStats = ({ data }: { data?: any }) => {
       </div>
 
       {/* Stats */}
-      <div className="space-y-4 w-full">
+      <div className="space-y-1.5 w-full">
         {stats.map((stat, index) => (
           <div
             key={stat.label}

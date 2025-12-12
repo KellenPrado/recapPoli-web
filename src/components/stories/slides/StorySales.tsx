@@ -6,7 +6,7 @@ const StorySales = () => {
   const showValorTotalVendido = clientData.sales.valorTotalVendido >= thresholds.valorTotalVendido;
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-8">
+    <div className="flex flex-col items-center justify-center text-center space-y-1.5">
       {/* Icon */}
       <div className="animate-fade-up opacity-0">
         <div className="relative">
@@ -27,7 +27,7 @@ const StorySales = () => {
       </div>
 
       {/* Stats */}
-      <div className="space-y-6 w-full">
+      <div className="space-y-1.5 w-full">
         {showValorTotalVendido && (
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 animate-fade-up opacity-0 stagger-3 border border-border/50">
             <div className="flex items-center justify-center gap-3 mb-2">
