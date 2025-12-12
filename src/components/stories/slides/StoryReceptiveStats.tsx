@@ -20,10 +20,10 @@ const StoryReceptiveStats = ({ data }: { data?: any }) => {
   ]);
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-8">
+    <div className="flex flex-col items-center justify-center text-center space-y-6 md:space-y-8">
       {/* Headline */}
       <div className="animate-fade-up opacity-0">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
           Seus clientes também falaram muito!
         </h2>
         <div className="h-1 w-20 bg-gradient-primary mx-auto rounded-full" />
@@ -34,14 +34,14 @@ const StoryReceptiveStats = ({ data }: { data?: any }) => {
         {stats.map((stat, index) => (
           <div
             key={stat.label}
-            className="flex items-center gap-4 bg-card/80 backdrop-blur-sm rounded-2xl p-4 animate-fade-up opacity-0 border border-border/50"
+            className="flex items-center gap-3 bg-card/80 backdrop-blur-sm rounded-2xl p-3 animate-fade-up opacity-0 border border-border/50"
             style={{ animationDelay: `${0.2 + index * 0.1}s` }}
           >
-            <div className="bg-gradient-primary p-3 rounded-xl shrink-0">
-              <stat.icon className="w-5 h-5 text-primary-foreground" />
+            <div className="bg-gradient-primary p-2 rounded-xl shrink-0">
+              <stat.icon className="w-4 h-4 text-primary-foreground" />
             </div>
             <div className="flex-1 text-left">
-              <div className="text-2xl md:text-3xl font-bold text-foreground">
+              <div className="text-xl md:text-2xl font-bold text-foreground">
                 <AnimatedNumber value={stat.value} delay={300 + index * 100} />
               </div>
               <p className="text-sm text-muted-foreground">{stat.label}</p>

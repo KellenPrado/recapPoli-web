@@ -13,6 +13,7 @@ import QuizContacts from "./slides/quizzes/QuizContacts";
 import QuizAudios from "./slides/quizzes/QuizAudios";
 import QuizTopCollaborator from "./slides/quizzes/QuizTopCollaborator";
 import QuizConnectedTime from "./slides/quizzes/QuizConnectedTime";
+import StoryFeedback from "./slides/StoryFeedback";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import logoImg from "@/assets/logo-poli.png"
 import useFetchUserData from "@/api/useFetchUsersData";
@@ -41,6 +42,7 @@ const stories = [
   // StoryConnectedTime,   // 10 - Tempo Conectado
   QuizMessages,         // 3 - Quiz: mensangens enviadas
   StoryClosing,         // 11 - Encerramento
+  StoryFeedback,        // 12 - Feedback
 ];
 
 interface StoryContainerProps {
@@ -171,7 +173,7 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="w-full max-w-lg mx-auto px-12 py-20">
+        <div className="w-full max-w-lg mx-auto px-6 py-8 md:px-12 md:py-16">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -229,18 +231,15 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
       </div>
 
       {/* Logo */}
-      <div className="absolute bottom-16 md:bottom-14 left-1/2 -translate-x-1/2 z-20">
+      <div className="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-20">
         <img
           src={logoImg}
           alt="Poli"
-          className="h-8 md:h-10 w-auto opacity-80"
+          className="h-6 md:h-8 w-auto opacity-80"
         />
       </div>
 
-      {/* Story indicator */}
-      <div className="absolute bottom-6 md:bottom-4 left-1/2 -translate-x-1/2 text-muted-foreground text-sm z-10">
-        {currentStory + 1} / {stories.length}
-      </div>
+
     </div>
   );
 };

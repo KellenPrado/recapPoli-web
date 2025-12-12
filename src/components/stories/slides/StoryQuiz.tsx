@@ -28,10 +28,10 @@ const StoryQuiz = ({ question, options, successMessage, failMessage = "Não foi 
   const correctIndex = options.findIndex(opt => opt.isCorrect);
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-8">
+    <div className="flex flex-col items-center justify-center text-center space-y-6 md:space-y-8">
       {/* Question */}
       <div className="animate-fade-up opacity-0">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
           {question}
         </h2>
         <div className="h-1 w-20 bg-gradient-primary mx-auto rounded-full" />
@@ -42,7 +42,7 @@ const StoryQuiz = ({ question, options, successMessage, failMessage = "Não foi 
         {options.map((option, index) => {
           let bgClass = "bg-card/80 border-border/50 hover:bg-card";
           let textClass = "text-foreground";
-          
+
           if (answered) {
             if (index === selectedIndex && !option.isCorrect) {
               bgClass = "bg-destructive/20 border-destructive";
@@ -58,17 +58,17 @@ const StoryQuiz = ({ question, options, successMessage, failMessage = "Não foi 
               key={index}
               onClick={() => handleSelect(index)}
               disabled={answered}
-              className={`flex items-center justify-center gap-4 ${bgClass} backdrop-blur-sm rounded-2xl p-4 animate-fade-up opacity-0 border transition-all duration-300 w-full ${answered ? "cursor-default" : "cursor-pointer"}`}
+              className={`flex items-center justify-center gap-4 ${bgClass} backdrop-blur-sm rounded-2xl p-3 animate-fade-up opacity-0 border transition-all duration-300 w-full ${answered ? "cursor-default" : "cursor-pointer"}`}
               style={{ animationDelay: `${0.2 + index * 0.1}s` }}
             >
-              <div className={`text-2xl md:text-3xl font-bold ${textClass}`}>
+              <div className={`text-xl md:text-2xl font-bold ${textClass}`}>
                 <AnimatedNumber value={option.value} delay={300 + index * 100} />
               </div>
               {answered && option.isCorrect && (
-                <CheckCircle className="w-6 h-6 text-green-500" />
+                <CheckCircle className="w-5 h-5 text-green-500" />
               )}
               {answered && index === selectedIndex && !option.isCorrect && (
-                <XCircle className="w-6 h-6 text-destructive" />
+                <XCircle className="w-5 h-5 text-destructive" />
               )}
             </button>
           );

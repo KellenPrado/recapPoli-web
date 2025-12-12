@@ -17,7 +17,7 @@ const StoryRanking = ({ data }: { data?: any }) => {
   const getPositionIcon = (position: number) => {
     switch (position) {
       case 1:
-        return <Crown className="w-6 h-6 text-coral" />;
+        return <Crown className="w-5 h-5 text-coral" />;
       case 2:
         return <Medal className="w-5 h-5 text-primary" />;
       case 3:
@@ -46,15 +46,15 @@ const StoryRanking = ({ data }: { data?: any }) => {
       <div className="animate-fade-up opacity-0">
         <div className="relative">
           <div className="absolute inset-0 bg-coral rounded-full blur-xl opacity-40 animate-pulse-glow-coral" />
-          <div className="relative bg-gradient-coral p-5 rounded-full">
-            <Crown className="w-10 h-10 text-primary-foreground" />
+          <div className="relative bg-gradient-coral p-3 rounded-full">
+            <Crown className="w-8 h-8 text-primary-foreground" />
           </div>
         </div>
       </div>
 
       {/* Headline */}
       <div className="animate-fade-up opacity-0 stagger-2">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground">
           Você fez história!
         </h2>
       </div>
@@ -76,7 +76,7 @@ const StoryRanking = ({ data }: { data?: any }) => {
         {topCollaborators.map((collab, index) => (
           <div
             key={collab.name}
-            className={`flex items-center gap-3 rounded-2xl p-4 animate-fade-up opacity-0 ${getPositionStyle(
+            className={`flex items-center gap-3 rounded-2xl p-3 animate-fade-up opacity-0 ${getPositionStyle(
               collab.position
             )}`}
             style={{ animationDelay: `${0.3 + index * 0.15}s` }}
@@ -87,8 +87,8 @@ const StoryRanking = ({ data }: { data?: any }) => {
             </div>
 
             {/* Avatar */}
-            <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center shrink-0">
-              <User className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center shrink-0">
+              <User className="w-5 h-5" />
             </div>
 
             {/* Info */}
