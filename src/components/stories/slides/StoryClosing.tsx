@@ -8,7 +8,7 @@ const features = [
 
 const StoryClosing = ({ data }: { data?: any }) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-6 md:space-y-8">
+    <div className="flex flex-col items-center justify-center text-center space-y-1.5">
       {/* Icon */}
       <div className="animate-fade-up opacity-0">
         <div className="relative">
@@ -27,7 +27,7 @@ const StoryClosing = ({ data }: { data?: any }) => {
       </div>
 
       {/* Features */}
-      <div className="space-y-4 w-full max-w-xs">
+      <div className="space-y-1.5 w-full max-w-xs">
         {features.map((feature, index) => (
           <div
             key={feature.text}
@@ -43,11 +43,9 @@ const StoryClosing = ({ data }: { data?: any }) => {
       </div>
 
       {/* Closing */}
-      <div className="space-y-4 animate-fade-up opacity-0 stagger-5 pt-4">
+      <div className="flex items-center justify-center gap-2 animate-fade-up opacity-0 stagger-5 pt-4">
         <p className="text-lg text-muted-foreground">E claro… mais histórias para contar</p>
-        <div className="flex items-center justify-center gap-2">
-          <Heart className="w-6 h-6 text-coral fill-coral animate-pulse" />
-        </div>
+        <Heart className="w-6 h-6 text-coral fill-coral animate-pulse flex-shrink-0" />
       </div>
 
       {/* Thank you */}

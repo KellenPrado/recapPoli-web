@@ -2,7 +2,7 @@ import { Sparkles } from "lucide-react";
 
 const StoryOpening = ({ data }: { data?: any }) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-6 md:space-y-8">
+    <div className="flex flex-col items-center justify-center text-center space-y-4 md:space-y-6">
       {/* Icon */}
       <div className="animate-fade-up opacity-0">
         <div className="relative">
