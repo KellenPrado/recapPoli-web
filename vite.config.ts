@@ -73,7 +73,7 @@ export default defineConfig(({ mode }) => ({
     assetsInlineLimit: 100000000,
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, "src/main.tsx"),
+        main: path.resolve(__dirname, "index.html"),
       },
       output: {
         entryFileNames: `recap-widget.js`,
