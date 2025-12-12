@@ -52,6 +52,9 @@ const cssInjectedByJs = () => {
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // Use absolute URL for production to make widget work everywhere
+  base: mode === 'production' ? 'https://recap-poli-web-b7pm.vercel.app/' : '/',
+
   server: {
     host: "::",
     port: 8080,
