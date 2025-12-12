@@ -45,11 +45,11 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
       <div className="antialiased font-sans">
         {/* Widget Overlay (Open State) */}
         {isOpen && (
-          <div className="fixed inset-0 z-[9999] flex flex-col bg-background/95 backdrop-blur-sm sm:flex-row sm:justify-end">
-            {/* Backdrop click to close (optional, maybe just on the side for desktop) */}
+          <div className="fixed inset-0 z-[9999] backdrop-blur-md flex items-end sm:items-stretch sm:justify-end">
+            {/* Backdrop click to close */}
             <div className="absolute inset-0" onClick={() => setIsOpen(false)} />
 
-            <div className="relative w-full h-full sm:max-w-[450px] sm:border-l sm:shadow-2xl bg-background z-10 animate-in slide-in-from-bottom sm:slide-in-from-right duration-300">
+            <div className="relative w-full h-[90vh] sm:h-full sm:max-w-[450px] bg-background rounded-t-3xl sm:rounded-none shadow-2xl overflow-hidden animate-in slide-in-from-bottom sm:slide-in-from-right duration-300 z-10">
               <App id={parsedId} userId={parsedUserId} />
             </div>
           </div>
@@ -75,7 +75,7 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
 };
 
 const WebComponent = r2wc(Widget, {
-  shadow: "open",
+  shadow: undefined, // Disable shadow DOM to allow backdrop-blur to work
   props: {
     "customer-id": "string",
     "user-id": "string"
