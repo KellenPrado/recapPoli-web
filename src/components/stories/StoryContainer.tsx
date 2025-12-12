@@ -5,14 +5,10 @@ import StoryProgress from "./StoryProgress";
 import StoryOpening from "./slides/StoryOpening";
 import StoryInteractions from "./slides/StoryInteractions";
 import StoryRanking from "./slides/StoryRanking";
-import StoryConnectedTime from "./slides/StoryConnectedTime";
 import StoryClosing from "./slides/StoryClosing";
 import StoryReceptiveStats from "./slides/StoryReceptiveStats";
 import QuizMessages from "./slides/quizzes/QuizMessages";
-import QuizContacts from "./slides/quizzes/QuizContacts";
 import QuizAudios from "./slides/quizzes/QuizAudios";
-import QuizTopCollaborator from "./slides/quizzes/QuizTopCollaborator";
-import QuizConnectedTime from "./slides/quizzes/QuizConnectedTime";
 import StoryFeedback from "./slides/StoryFeedback";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import logoImg from "@/assets/logo-poli.png"
@@ -33,16 +29,12 @@ const STORY_DURATION = 15000; // 15 seconds per story
 const stories = [
   StoryOpening,         // 1 - Abertura
   StoryInteractions,    // 2 - Interações
-  //QuizContacts,         // 4 - Quiz: Contatos
-  StoryReceptiveStats,  // 6 - Stats Receptivos
-  //QuizTopCollaborator,  // 7 - Quiz: Top Colaborador
-  QuizAudios,           // 5 - Quiz: chats do usuário
-  StoryRanking,         // 8 - Top Colaboradores
-  // QuizConnectedTime,    // 9 - Quiz: Tempo Conectado
-  // StoryConnectedTime,   // 10 - Tempo Conectado
-  QuizMessages,         // 3 - Quiz: mensangens enviadas
-  StoryClosing,         // 11 - Encerramento
-  StoryFeedback,        // 12 - Feedback
+  StoryReceptiveStats,  // 3 - Stats Receptivos
+  QuizAudios,           // 4 - Quiz: chats do usuário
+  StoryRanking,         // 5 - Top Colaboradores
+  QuizMessages,         // 6 - Quiz: mensangens enviadas
+  StoryClosing,         // 7 - Encerramento
+  StoryFeedback,        // 8 - Feedback
 ];
 
 interface StoryContainerProps {
@@ -193,10 +185,12 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
               <CurrentStoryComponent
                 key={currentStory}
                 data={
-                  [QuizAudios, StoryRanking, StoryConnectedTime, QuizTopCollaborator, QuizConnectedTime].includes(CurrentStoryComponent)
+                  [QuizAudios, StoryRanking].includes(CurrentStoryComponent)
                     ? userData
                     : clientData
                 }
+                id={customerId}
+                userId={userId}
               />
             )
           )}
@@ -231,7 +225,7 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
       </div>
 
       {/* Logo */}
-      <div className="absolute bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 z-20">
+      <div className="absolute top-4 left-4 z-20">
         <img
           src={logoImg}
           alt="Poli"

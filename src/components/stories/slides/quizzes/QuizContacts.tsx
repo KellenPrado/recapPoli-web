@@ -12,7 +12,7 @@ const generateOptions = (correctValue: number) => {
   }));
 };
 
-const QuizContacts = ({ data }: { data?: any }) => {
+const QuizContacts = ({ data, id, userId }: { data?: any; id?: number; userId?: number }) => {
   if (!data) return null;
   const correctValue = data.interactions.contatosAtendidos;
   const options = useMemo(() => generateOptions(correctValue), [correctValue]);
@@ -22,6 +22,8 @@ const QuizContacts = ({ data }: { data?: any }) => {
       question="Quantos contatos você acredita que atenderam este ano?"
       options={options}
       successMessage="Parabéns! Na mosca"
+      id={id}
+      userId={userId}
     />
   );
 };

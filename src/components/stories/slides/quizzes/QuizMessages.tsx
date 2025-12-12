@@ -12,7 +12,7 @@ const generateOptions = (correctValue: number) => {
   }));
 };
 
-const QuizMessages = ({ data }: { data?: any }) => {
+const QuizMessages = ({ data, id, userId }: { data?: any; id?: number; userId?: number }) => {
   if (!data) return null;
   const correctValue = data.interactions.chatsIniciadosEmpresa;
   const options = useMemo(() => generateOptions(correctValue), [correctValue]);
@@ -22,6 +22,8 @@ const QuizMessages = ({ data }: { data?: any }) => {
       question="Quantos chats você acredita que a empresa iniciou (conversa ativa) este ano?"
       options={options}
       successMessage="Parabéns! Você acertou em cheio"
+      id={id}
+      userId={userId}
     />
   );
 };

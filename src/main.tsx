@@ -16,7 +16,7 @@ declare global {
 }
 
 const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id"?: string; "user-id"?: string }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const parsedId = customerId ? parseInt(customerId) : undefined;
   const parsedUserId = userId ? parseInt(userId) : undefined;
 
@@ -64,8 +64,8 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
       <div className="antialiased font-sans">
         {/* Widget Overlay (Open State) */}
         {isOpen && (
-          <div className="fixed inset-0 z-[9999] flex items-end sm:items-stretch sm:justify-end pointer-events-none">
-            <div className="relative w-full h-[90vh] sm:h-full sm:max-w-[450px] bg-background rounded-t-3xl sm:rounded-none shadow-2xl overflow-hidden animate-in slide-in-from-bottom sm:slide-in-from-right duration-300 pointer-events-auto">
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
+            <div className="relative w-full max-w-3xl max-h-[90vh] bg-background rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-300 pointer-events-auto">
               <App id={parsedId} userId={parsedUserId} />
             </div>
           </div>
@@ -125,4 +125,27 @@ window.RecapPoli = {
     window.dispatchEvent(new Event("RECAP_POLI_TOGGLE"));
   }
 };
+
+// Notify parent when widget opens (include previous quiz/feedback state if any)
+window.addEventListener("RECAP_POLI_OPEN", () => {
+  const payload: any = {
+    type: "RETROSPECTIVE_OPENED",
+    customerId: undefined,
+    userId: undefined,
+    openedAt: new Date().toISOString(),
+    lastQuizAnswer: (window as any).RecapPoli?.lastQuizAnswer || null,
+    lastFeedback: (window as any).RecapPoli?.lastFeedback || null,
+  };
+
+  // Try to pull IDs from the existing widget element if present
+  const widgetEl = document.querySelector("recap-poli-widget");
+  if (widgetEl) {
+    const cid = widgetEl.getAttribute("customer-id");
+    const uid = widgetEl.getAttribute("user-id");
+    if (cid) payload.customerId = parseInt(cid);
+    if (uid) payload.userId = parseInt(uid);
+  }
+
+  window.parent.postMessage(payload, "*");
+});
 

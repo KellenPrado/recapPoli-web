@@ -12,7 +12,7 @@ const generateOptions = (correctValue: number) => {
   }));
 };
 
-const QuizAudios = ({ data }: { data?: any }) => {
+const QuizAudios = ({ data, id, userId }: { data?: any; id?: number; userId?: number }) => {
   if (!data) return null;
   const correctValue = data.userYourself.userChats;
   const options = useMemo(() => generateOptions(correctValue), [correctValue]);
@@ -22,6 +22,8 @@ const QuizAudios = ({ data }: { data?: any }) => {
       question="Quantos chats você acredita ter atendido este ano?"
       options={options}
       successMessage="Parabéns! Mandou bem"
+      id={id}
+      userId={userId}
     />
   );
 };
