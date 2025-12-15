@@ -15,6 +15,7 @@ export async function hasSeen(
   customerId: number | null,
   userId: number | null
 ): Promise<boolean> {
+  console.log ("identificação recap",customerId, userId);
   if (!customerId || !userId) return false;
 
   const { data, error } = await supabase
