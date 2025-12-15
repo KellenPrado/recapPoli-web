@@ -14,7 +14,7 @@ const StoryInteractions = ({ data }: { data?: any }) => {
   ]);
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-4 md:space-y-6">
+    <div className="flex flex-col items-center justify-center text-center space-y-1.5 md:space-y-6">
       {/* Headline */}
       <div className="animate-fade-up opacity-0">
         <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">
@@ -24,7 +24,7 @@ const StoryInteractions = ({ data }: { data?: any }) => {
       </div>
 
       {/* Stats */}
-      <div className="space-y-4 w-full">
+      <div className="space-y-1.5 w-full">
         {stats.map((stat, index) => (
           <div
             key={stat.label}

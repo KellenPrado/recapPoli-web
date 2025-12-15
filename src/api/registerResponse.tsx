@@ -59,13 +59,6 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async () => {
 
   const alreadySeen = await hasSeen(customerId, userId);
 
-  if (alreadySeen) {
-    console.log("[WIDGET] Usuário já viu — não exibindo");
-    return;
-  }
-
-  console.log("[WIDGET] Exibindo informativo pela primeira vez");
-  window.dispatchEvent(new Event("RECAP_POLI_OPENED"));
 
   // Marca como visto imediatamente após abrir
   await markAsSeen(customerId, userId);
