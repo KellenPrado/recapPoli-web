@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import r2wc from "@r2wc/react-to-web-component";
-import App from "./App.tsx";
+import App from "./App";
+import "./api/registerResponse";
 import indexStyle from "./index.css?inline";
 import { Sparkles } from "lucide-react";
 
+/* =====================================================
+   TIPAGEM GLOBAL
+===================================================== */
 declare global {
   interface Window {
     RecapPoli: {
@@ -12,77 +16,111 @@ declare global {
       close: () => void;
       toggle: () => void;
     };
+    __RECAP_POLI_BLOCKED__?: boolean;
   }
 }
 
-const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id"?: string; "user-id"?: string }) => {
-  const [isOpen, setIsOpen] = useState(true);
-  const parsedId = customerId ? parseInt(customerId) : undefined;
+/* =====================================================
+   COMPONENTE DO WIDGET
+===================================================== */
+const Widget = ({
+  "customer-id": customerId,
+  "user-id": userId,
+}: {
+  "customer-id"?: string;
+  "user-id"?: string;
+}) => {
+  const parsedCustomerId = customerId ? parseInt(customerId) : undefined;
   const parsedUserId = userId ? parseInt(userId) : undefined;
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(
+    window.__RECAP_POLI_BLOCKED__ === true
+  );
+
+  /* =====================================================
+     LISTENERS DE CONTROLE
+  ===================================================== */
   useEffect(() => {
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
-    const handleToggle = () => setIsOpen((prev) => !prev);
+    const handleBlocked = () => setIsBlocked(true);
 
-    window.addEventListener("RECAP_POLI_OPEN", handleOpen);
+    window.addEventListener("RECAP_POLI_OPENED", handleOpen);
     window.addEventListener("RECAP_POLI_CLOSE", handleClose);
-    window.addEventListener("RECAP_POLI_TOGGLE", handleToggle);
+    window.addEventListener("RECAP_POLI_BLOCKED", handleBlocked);
 
     return () => {
-      window.removeEventListener("RECAP_POLI_OPEN", handleOpen);
+      window.removeEventListener("RECAP_POLI_OPENED", handleOpen);
       window.removeEventListener("RECAP_POLI_CLOSE", handleClose);
-      window.removeEventListener("RECAP_POLI_TOGGLE", handleToggle);
+      window.removeEventListener("RECAP_POLI_BLOCKED", handleBlocked);
     };
   }, []);
 
-  // Backdrop component that will be rendered outside Shadow DOM
-  const backdropElement = isOpen ? createPortal(
-    <div
-      style={{
-        position: 'fixed',
-        inset: '0',
-        zIndex: '9998',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-      }}
-      onClick={() => setIsOpen(false)}
-    />,
-    document.body
-  ) : null;
+  /* =====================================================
+     SE BLOQUEADO, NÃO RENDERIZA NADA
+  ===================================================== */
+  if (isBlocked) return null;
+
+  /* =====================================================
+     BACKDROP FORA DO SHADOW DOM
+  ===================================================== */
+  const backdropElement = isOpen
+    ? createPortal(
+        <div
+          style={{
+            position: "fixed",
+            inset: "0",
+            zIndex: "9998",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+          }}
+          onClick={() => setIsOpen(false)}
+        />,
+        document.body
+      )
+    : null;
 
   return (
     <>
+      {/* Fonts */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossOrigin="anonymous"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
+
       <style>{indexStyle}</style>
 
-      {/* Render backdrop outside Shadow DOM using Portal */}
       {backdropElement}
 
       <div className="antialiased font-sans">
-        {/* Widget Overlay (Open State) */}
+        {/* ===================== OVERLAY ===================== */}
         {isOpen && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
             <div className="relative w-full max-w-3xl max-h-[90vh] bg-background rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-300 pointer-events-auto">
-              <App id={parsedId} userId={parsedUserId} />
+              <App id={parsedCustomerId} userId={parsedUserId} />
             </div>
           </div>
         )}
 
-        {/* Launcher Button (Closed State) */}
+        {/* ===================== LAUNCHER ===================== */}
         {!isOpen && (
           <button
-            onClick={() => setIsOpen(true)}
-            className="fixed bottom-4 right-4 z-[9998] p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 group"
-            style={{
-              background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%)",
-            }}
-            aria-label="Abrir Retrospectiva"
+            onClick={() =>
+              window.dispatchEvent(
+                new Event("RECAP_POLI_REQUEST_OPEN")
+              )
+            }
+            className="fixed bottom-4 right-4 z-[9998] p-4 rounded-full shadow-lg hover:scale-110 transition"
+            aria-label="Abrir retrospectiva"
           >
-            <Sparkles className="w-8 h-8 text-white animate-pulse" />
-            <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full border-2 border-white"></span>
+            <Sparkles className="w-8 h-8 text-white" />
           </button>
         )}
       </div>
@@ -90,62 +128,47 @@ const Widget = ({ "customer-id": customerId, "user-id": userId }: { "customer-id
   );
 };
 
+/* =====================================================
+   WEB COMPONENT
+===================================================== */
 const WebComponent = r2wc(Widget, {
-  shadow: "open", // Re-enable shadow DOM - required for r2wc to work properly
+  shadow: "open",
   props: {
     "customer-id": "string",
-    "user-id": "string"
-  }
+    "user-id": "string",
+  },
 });
 
-customElements.define("recap-poli-widget", WebComponent);
+if (!customElements.get("recap-poli-widget")) {
+  customElements.define("recap-poli-widget", WebComponent);
+}
 
-// Inicializa a API Global
+/* =====================================================
+   API GLOBAL
+===================================================== */
 window.RecapPoli = {
   open: (options) => {
-    // Se o widget não existir, cria (lógica antiga), mas agora o ideal é apenas abrir se já existir
-    const widget = document.querySelector("recap-poli-widget");
+    let widget = document.querySelector("recap-poli-widget");
+
     if (!widget) {
-      const newWidget = document.createElement("recap-poli-widget");
-      if (options?.customerId) newWidget.setAttribute("customer-id", options.customerId.toString());
-      if (options?.userId) newWidget.setAttribute("user-id", options.userId.toString());
-      document.body.appendChild(newWidget);
-      // Pequeno delay para garantir que o componente montou e o listener está ativo
-      setTimeout(() => window.dispatchEvent(new Event("RECAP_POLI_OPEN")), 100);
-    } else {
-      if (options?.customerId) widget.setAttribute("customer-id", options.customerId.toString());
-      if (options?.userId) widget.setAttribute("user-id", options.userId.toString());
-      window.dispatchEvent(new Event("RECAP_POLI_OPEN"));
+      widget = document.createElement("recap-poli-widget");
+      document.body.appendChild(widget);
     }
+
+    if (options?.customerId)
+      widget.setAttribute("customer-id", options.customerId.toString());
+
+    if (options?.userId)
+      widget.setAttribute("user-id", options.userId.toString());
+
+    window.dispatchEvent(new Event("RECAP_POLI_REQUEST_OPEN"));
   },
+
   close: () => {
     window.dispatchEvent(new Event("RECAP_POLI_CLOSE"));
   },
+
   toggle: () => {
-    window.dispatchEvent(new Event("RECAP_POLI_TOGGLE"));
-  }
+    window.dispatchEvent(new Event("RECAP_POLI_REQUEST_OPEN"));
+  },
 };
-
-// Notify parent when widget opens (include previous quiz/feedback state if any)
-window.addEventListener("RECAP_POLI_OPEN", () => {
-  const payload: any = {
-    type: "RETROSPECTIVE_OPENED",
-    customerId: undefined,
-    userId: undefined,
-    openedAt: new Date().toISOString(),
-    lastQuizAnswer: (window as any).RecapPoli?.lastQuizAnswer || null,
-    lastFeedback: (window as any).RecapPoli?.lastFeedback || null,
-  };
-
-  // Try to pull IDs from the existing widget element if present
-  const widgetEl = document.querySelector("recap-poli-widget");
-  if (widgetEl) {
-    const cid = widgetEl.getAttribute("customer-id");
-    const uid = widgetEl.getAttribute("user-id");
-    if (cid) payload.customerId = parseInt(cid);
-    if (uid) payload.userId = parseInt(uid);
-  }
-
-  window.parent.postMessage(payload, "*");
-});
-

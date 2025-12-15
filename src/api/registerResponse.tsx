@@ -1,81 +1,79 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
+const URL_DA_ORIGEM_CONFIAVEL = "http://localhost:8080";
+const ORIGEM_CONFIAVEL = URL_DA_ORIGEM_CONFIAVEL.replace(/\/$/, "");
 
-const SUPABASE_URL = 'https://ptnldcgmgcilqftamawk.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_-9QTMGtF4Q55ugsJieiamw_0IZBoJt-';
+const SUPABASE_URL = "https://ptnldcgmgcilqftamawk.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_-9QTMGtF4Q55ugsJieiamw_0IZBoJt-";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-window.addEventListener('message', async (event) => {
-  // Apenas processe mensagens da origem esperada por segurança, se possível
-  // if (event.origin !== 'URL_DA_ORIGEM') return;
+/* =====================================================
+   VERIFICA SE JÁ FOI VISTO
+===================================================== */
+export async function hasSeen(
+  customerId: number | null,
+  userId: number | null
+): Promise<boolean> {
+  if (!customerId || !userId) return false;
 
-  const data = event.data;
+  const { data, error } = await supabase
+    .from("register")
+    .select("views")
+    .eq("customer_id", customerId)
+    .eq("user_id", userId)
+    .maybeSingle();
 
-  // Verifique se os dados contêm um campo 'type'
-  if (!data || !data.type) {
+  if (error) {
+    console.warn("[SUPABASE] hasSeen erro:", error);
+    return false;
+  }
+
+  return data?.views === true;
+}
+
+/* =====================================================
+   MARCA COMO VISTO
+===================================================== */
+async function markAsSeen(customerId: number, userId: number) {
+  await supabase.from("register").upsert(
+    {
+      customer_id: customerId,
+      user_id: userId,
+      views: true,
+      created_at: new Date().toISOString(),
+    },
+    { onConflict: "customer_id,user_id" }
+  );
+}
+
+/* =====================================================
+   CONTROLE DE ABERTURA DO WIDGET
+===================================================== */
+window.addEventListener("RECAP_POLI_REQUEST_OPEN", async () => {
+  const widget = document.querySelector("recap-poli-widget");
+  if (!widget) return;
+
+  const customerId = Number(widget.getAttribute("customer-id"));
+  const userId = Number(widget.getAttribute("user-id"));
+
+  const alreadySeen = await hasSeen(customerId, userId);
+
+  if (alreadySeen) {
+    console.log("[WIDGET] Usuário já viu — não exibindo");
     return;
   }
 
-  let dataToInsert = null;
+  console.log("[WIDGET] Exibindo informativo pela primeira vez");
+  window.dispatchEvent(new Event("RECAP_POLI_OPENED"));
 
-  // Normalize common ids (support both snake_case and camelCase)
-  const customerId = data.customerId ?? data.customer_id ?? null;
-  const userId = data.userId ?? data.user_id ?? null;
+  // Marca como visto imediatamente após abrir
+  await markAsSeen(customerId, userId);
+});
 
-  switch (data.type) {
-    case "RETROSPECTIVE_OPENED":
-      dataToInsert = {
-        customer_id: customerId,
-        user_id: userId,
-        created_at: data.openedAt || new Date().toISOString(),
-        quiz_chats: false,
-        quiz_activeMsg: false,
-        feedback: false,
-      };
-      break;
-    case "RETROSPECTIVE_QUIZ_ANSWER":
-      dataToInsert = {
-        customer_id: customerId,
-        user_id: userId,
-        created_at: data.answeredAt || new Date().toISOString(),
-        quiz_chats: true,
-        quiz_activeMsg: !!data.quizActive || true,
-        feedback: false,
-        quiz_data: data.quizData || data.payload || null,
-      };
-      break;
-    case "RETROSPECTIVE_FEEDBACK":
-      dataToInsert = {
-        customer_id: customerId,
-        user_id: userId,
-        created_at: data.feedbackAt || new Date().toISOString(),
-        quiz_chats: false,
-        quiz_activeMsg: false,
-        feedback: true,
-        feedback_text: data.feedbackText || data.payload || null,
-      };
-      break;
-    default:
-      return;
-  }
-
-  // --- Realizar a Inserção no Supabase ---
-  if (dataToInsert) {
-    console.log(`Inserindo dados do tipo ${data.type} no Supabase:`, dataToInsert);
-    try {
-      const { data: inserted, error } = await supabase
-        .from('views')
-        .insert([dataToInsert])
-        .select();
-
-      if (error) {
-        console.error('Erro ao inserir no Supabase:', error);
-      } else {
-        console.log('Inserção bem-sucedida:', inserted);
-      }
-    } catch (err) {
-      console.error('Erro inesperado ao inserir no Supabase:', err);
-    }
-  }
+/* =====================================================
+   BLOQUEIA MENSAGENS EXTERNAS NÃO CONFIÁVEIS
+===================================================== */
+window.addEventListener("message", (event) => {
+  if (event.origin !== ORIGEM_CONFIAVEL) return;
 });
