@@ -16,7 +16,6 @@ declare global {
       close: () => void;
       toggle: () => void;
     };
-    __RECAP_POLI_BLOCKED__?: boolean;
   }
 }
 
@@ -34,48 +33,39 @@ const Widget = ({
   const parsedUserId = userId ? parseInt(userId) : undefined;
 
   const [isOpen, setIsOpen] = useState(false);
-  const [isBlocked, setIsBlocked] = useState(
-    window.__RECAP_POLI_BLOCKED__ === true
-  );
 
   /* =====================================================
-     LISTENERS DE CONTROLE
+     EVENTOS DE CONTROLE
   ===================================================== */
   useEffect(() => {
-    const handleOpen = () => setIsOpen(true);
-    const handleClose = () => setIsOpen(false);
-    const handleBlocked = () => setIsBlocked(true);
+    const open = () => setIsOpen(true);
+    const close = () => setIsOpen(false);
 
-    window.addEventListener("RECAP_POLI_OPENED", handleOpen);
-    window.addEventListener("RECAP_POLI_CLOSE", handleClose);
-    window.addEventListener("RECAP_POLI_BLOCKED", handleBlocked);
+    window.addEventListener("RECAP_POLI_OPENED", open);
+    window.addEventListener("RECAP_POLI_CLOSE", close);
 
     return () => {
-      window.removeEventListener("RECAP_POLI_OPENED", handleOpen);
-      window.removeEventListener("RECAP_POLI_CLOSE", handleClose);
-      window.removeEventListener("RECAP_POLI_BLOCKED", handleBlocked);
+      window.removeEventListener("RECAP_POLI_OPENED", open);
+      window.removeEventListener("RECAP_POLI_CLOSE", close);
     };
   }, []);
 
   /* =====================================================
-     SE BLOQUEADO, NÃO RENDERIZA NADA
+     BACKDROP (FORA DO SHADOW DOM)
   ===================================================== */
-  if (isBlocked) return null;
-
-  /* =====================================================
-     BACKDROP FORA DO SHADOW DOM
-  ===================================================== */
-  const backdropElement = isOpen
+  const backdrop = isOpen
     ? createPortal(
         <div
           style={{
             position: "fixed",
-            inset: "0",
-            zIndex: "9998",
+            inset: 0,
+            zIndex: 9998,
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
           }}
-          onClick={() => setIsOpen(false)}
+          onClick={() =>
+            window.dispatchEvent(new Event("RECAP_POLI_CLOSE"))
+          }
         />,
         document.body
       )
@@ -83,47 +73,60 @@ const Widget = ({
 
   return (
     <>
-      {/* Fonts */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossOrigin="anonymous"
-      />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-      />
-
       <style>{indexStyle}</style>
+      {backdrop}
 
-      {backdropElement}
-
-      <div className="antialiased font-sans">
-        {/* ===================== OVERLAY ===================== */}
-        {isOpen && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
-            <div className="relative w-full max-w-3xl max-h-[90vh] bg-background rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-300 pointer-events-auto">
-              <App id={parsedCustomerId} userId={parsedUserId} />
-            </div>
+      {/* ================= OVERLAY ================= */}
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
+          <div className="pointer-events-auto w-full max-w-3xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden bg-background animate-in zoom-in duration-300">
+            <App id={parsedCustomerId} userId={parsedUserId} />
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ===================== LAUNCHER ===================== */}
-        {!isOpen && (
-          <button
-            onClick={() =>
-              window.dispatchEvent(
-                new Event("RECAP_POLI_REQUEST_OPEN")
-              )
-            }
-            className="fixed bottom-4 right-4 z-[9998] p-4 rounded-full shadow-lg hover:scale-110 transition"
-            aria-label="Abrir retrospectiva"
-          >
-            <Sparkles className="w-8 h-8 text-white" />
-          </button>
-        )}
-      </div>
+      {/* ================= ÍCONE (SEMPRE VISÍVEL) ================= */}
+      {!isOpen && (
+        <button
+          onClick={() =>
+            window.dispatchEvent(
+              new Event("RECAP_POLI_REQUEST_OPEN")
+            )
+          }
+          aria-label="Abrir retrospectiva"
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            zIndex: 9998,
+            width: "64px",
+            height: "64px",
+            borderRadius: "50%",
+            background:
+              "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)",
+            boxShadow:
+              "0 10px 25px rgba(59,130,246,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* Badge vermelho */}
+          <span
+            style={{
+              position: "absolute",
+              top: "6px",
+              right: "6px",
+              width: "10px",
+              height: "10px",
+              backgroundColor: "#ef4444",
+              borderRadius: "50%",
+            }}
+          />
+
+          <Sparkles size={28} color="#fff" />
+        </button>
+      )}
     </>
   );
 };
@@ -144,7 +147,7 @@ if (!customElements.get("recap-poli-widget")) {
 }
 
 /* =====================================================
-   API GLOBAL
+   API GLOBAL (MANTIDA)
 ===================================================== */
 window.RecapPoli = {
   open: (options) => {
@@ -155,11 +158,19 @@ window.RecapPoli = {
       document.body.appendChild(widget);
     }
 
-    if (options?.customerId)
-      widget.setAttribute("customer-id", options.customerId.toString());
+    if (options?.customerId) {
+      widget.setAttribute(
+        "customer-id",
+        options.customerId.toString()
+      );
+    }
 
-    if (options?.userId)
-      widget.setAttribute("user-id", options.userId.toString());
+    if (options?.userId) {
+      widget.setAttribute(
+        "user-id",
+        options.userId.toString()
+      );
+    }
 
     window.dispatchEvent(new Event("RECAP_POLI_REQUEST_OPEN"));
   },
