@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 
-const URL_DA_ORIGEM_CONFIAVEL = "http://localhost:8080";
+const URL_DA_ORIGEM_CONFIAVEL = "https://recap-poli-web-b7pm.vercel.app/";
 const ORIGEM_CONFIAVEL = URL_DA_ORIGEM_CONFIAVEL.replace(/\/$/, "");
 
 const SUPABASE_URL = "https://ptnldcgmgcilqftamawk.supabase.co";
