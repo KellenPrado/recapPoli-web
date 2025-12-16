@@ -111,17 +111,6 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
    LOG E REGISTRO DE EVENTOS DO WIDGET
 ===================================================== */
 window.addEventListener("message", async (event) => {
-  console.log("[BACK][message] recebido", {
-    origin: event.origin,
-    data: event.data,
-  });
-
-  // Segurança opcional
-  // if (event.origin !== ORIGEM_CONFIAVEL) {
-  //   console.warn("[BACK][message] origem não confiável", event.origin);
-  //   return;
-  // }
-
   const data = event.data;
 
   if (!data) {
