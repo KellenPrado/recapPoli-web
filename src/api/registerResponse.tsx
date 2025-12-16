@@ -1,7 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 
-const URL_DA_ORIGEM_CONFIAVEL = "https://recap-poli-web-b7pm.vercel.app/";
-const ORIGEM_CONFIAVEL = URL_DA_ORIGEM_CONFIAVEL.replace(/\/$/, "");
 
 const SUPABASE_URL = "https://ptnldcgmgcilqftamawk.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_-9QTMGtF4Q55ugsJieiamw_0IZBoJt-";
