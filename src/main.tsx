@@ -22,8 +22,10 @@ const Widget = ({
   "customer-id"?: string;
   "user-id"?: string;
 }) => {
+  console.log("Início do Widget (main.tsx)", customerId, userId);
   const parsedCustomerId = customerId ? Number(customerId) : undefined;
   const parsedUserId = userId ? Number(userId) : undefined;
+  console.log("parsed:", parsedCustomerId, parsedUserId);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,8 +33,14 @@ const Widget = ({
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    window.addEventListener("RECAP_POLI_OPENED", handleOpen);
-    window.addEventListener("RECAP_POLI_CLOSE", handleClose);
+    window.addEventListener("RECAP_POLI_OPENED", () => {
+      console.log("RECAP_POLI_OPENED");
+      handleOpen();
+    });
+    window.addEventListener("RECAP_POLI_CLOSE", () => {
+      console.log("RECAP_POLI_CLOSE");
+      handleClose();
+    });
 
     return () => {
       window.removeEventListener("RECAP_POLI_OPENED", handleOpen);
@@ -51,7 +59,7 @@ const Widget = ({
             WebkitBackdropFilter: "blur(8px)",
           }}
         />,
-        document.body
+        document.body,
       )
     : null;
 
@@ -104,7 +112,7 @@ window.RecapPoli = {
     window.dispatchEvent(
       new CustomEvent("RECAP_POLI_REQUEST_OPEN", {
         detail: { auto: false },
-      })
+      }),
     );
   },
 
@@ -116,7 +124,7 @@ window.RecapPoli = {
     window.dispatchEvent(
       new CustomEvent("RECAP_POLI_REQUEST_OPEN", {
         detail: { auto: false },
-      })
+      }),
     );
   },
 };
@@ -127,6 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.dispatchEvent(
     new CustomEvent("RECAP_POLI_REQUEST_OPEN", {
       detail: { auto: true },
-    })
+    }),
   );
 });

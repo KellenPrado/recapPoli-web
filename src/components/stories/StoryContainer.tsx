@@ -11,7 +11,7 @@ import QuizMessages from "./slides/quizzes/QuizMessages";
 import QuizAudios from "./slides/quizzes/QuizAudios";
 import StoryFeedback from "./slides/StoryFeedback";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import logoImg from "@/assets/logo-poli.png"
+import logoImg from "@/assets/logo-poli.png";
 import useFetchUserData from "@/api/useFetchUsersData";
 
 const closeWidget = () => {
@@ -27,14 +27,14 @@ const closeWidget = () => {
 const STORY_DURATION = 15000; // 15 seconds per story
 
 const stories = [
-  StoryOpening,         // 1 - Abertura
-  StoryInteractions,    // 2 - Interações
-  StoryReceptiveStats,  // 3 - Stats Receptivos
-  QuizAudios,           // 4 - Quiz: chats do usuário
-  StoryRanking,         // 5 - Top Colaboradores
-  QuizMessages,         // 6 - Quiz: mensangens enviadas
-  StoryClosing,         // 7 - Encerramento
-  StoryFeedback,        // 8 - Feedback
+  StoryOpening, // 1 - Abertura
+  StoryInteractions, // 2 - Interações
+  StoryReceptiveStats, // 3 - Stats Receptivos
+  QuizAudios, // 4 - Quiz: chats do usuário
+  StoryRanking, // 5 - Top Colaboradores
+  QuizMessages, // 6 - Quiz: mensangens enviadas
+  StoryClosing, // 7 - Encerramento
+  StoryFeedback, // 8 - Feedback
 ];
 
 interface StoryContainerProps {
@@ -43,19 +43,29 @@ interface StoryContainerProps {
 }
 
 const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
+  console.log("StoryContainer component rendered", id, propUserId);
   const [currentStory, setCurrentStory] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const [searchParams] = useSearchParams();
-  const customerId = id || (searchParams.get("id") ? parseInt(searchParams.get("id")!) : undefined);
+  const customerId =
+    id ||
+    (searchParams.get("id") ? parseInt(searchParams.get("id")!) : undefined);
   // Pega o userId da URL ou usa undefined para ativar o default do hook
-  const userId = propUserId || (searchParams.get("userId") ? parseInt(searchParams.get("userId")!) : undefined);
+  const userId =
+    propUserId ||
+    (searchParams.get("userId")
+      ? parseInt(searchParams.get("userId")!)
+      : undefined);
 
   const { clientData, loading, error } = useFetchEmpresaData(customerId);
   // Usa o userId aqui, não o customerId
-  const { clientData: userData, loading: userLoading, error: userError } = useFetchUserData(userId);
-
+  const {
+    clientData: userData,
+    loading: userLoading,
+    error: userError,
+  } = useFetchUserData(userId);
 
   const goToNext = useCallback(() => {
     if (currentStory < stories.length - 1) {
@@ -115,7 +125,7 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
       if (e.key === "ArrowLeft") goToPrev();
       if (e.key === " ") setIsPaused((prev) => !prev);
     },
-    [goToNext, goToPrev]
+    [goToNext, goToPrev],
   );
 
   useEffect(() => {
@@ -232,8 +242,6 @@ const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
           className="h-6 md:h-8 w-auto opacity-80"
         />
       </div>
-
-
     </div>
   );
 };
