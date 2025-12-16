@@ -52,11 +52,16 @@ async function markAsSeen(customerId: number, userId: number) {
    CONTROLE DE ABERTURA DO WIDGET
 ===================================================== */
 window.addEventListener("RECAP_POLI_REQUEST_OPEN", async () => {
-  const widget = document.querySelector("recap-poli-widget");
-  if (!widget) return;
+  const widget = document.querySelector("recap-poli-widget") as any;
+  if (!widget) {
+    console.warn("[WIDGET] Widget não encontrado");
+    return;
+  }
 
   const customerId = Number(widget.getAttribute("customer-id"));
   const userId = Number(widget.getAttribute("user-id"));
+
+  console.log("[WIDGET] Verificando se já foi visto:", { customerId, userId });
 
   const alreadySeen = await hasSeen(customerId, userId);
 
@@ -67,11 +72,16 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async () => {
 
   console.log("[WIDGET] Primeira visualização — abrindo widget");
 
-  // 👉 ABRE O WIDGET
-  widget.setAttribute("open", "true");
-  // ou widget.open();
+  // 👉 TENTA ABRIR O WIDGET
+  try {
+    widget.open = true; // Propriedade (recomendado para Web Components)
+    // Alternativa se não funcionar acima:
+    // widget.setAttribute("open", "true");
+  } catch (err) {
+    console.error("[WIDGET] Erro ao abrir:", err);
+  }
 
-  // 👉 MARCA COMO VISTO
+  // 👉 MARCA COMO VISTO APÓS ABRIR
   await markAsSeen(customerId, userId);
+  console.log("[WIDGET] Marcado como visto no banco");
 });
-
