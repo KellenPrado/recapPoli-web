@@ -3,15 +3,15 @@
     "outputDirectory": "dist",
   "headers": [
     {
-      "source": "https://recap-poli-web-b7pm.vercel.app/recap-widget.js",
+      "source": "/recap-widget.js",
       "headers": [
-                {
-                    "key": "Access-Control-Allow-Origin",
-                    "value": "*"
-                },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
         {
           "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
+          "value": "no-cache, no-store, must-revalidate, max-age=0"
         }
       ]
     }
