@@ -29,6 +29,7 @@ const useFetchEmpresaData = (customer_id?: number) => {
         setLoading(false);
         return;
       }
+      console.log("[BACK] useFetchEmpresaData: start fetch for customer_id", customer_id);
       setLoading(true);
       setError(null);
 
@@ -53,15 +54,13 @@ const useFetchEmpresaData = (customer_id?: number) => {
         const userData = empresaDataArray; // Assumindo que dados do usuário estão na mesma linha (ou faça uma 2ª busca)
 
         if (!empresaData) {
-          // Se a busca com .single() retornar null, o dado não foi encontrado
+          console.warn("[BACK] useFetchEmpresaData: no empresa data returned for id", customer_id);
           throw new Error("Nenhum dado da empresa encontrado com o ID fornecido.");
         }
 
-        // 3. TRANSFORMAÇÃO DE DADOS (USANDO SUAS COLUNAS DO SUPABASE)
-        // O restante da sua lógica de mapeamento permanece a mesma
+        console.log("[BACK] useFetchEmpresaData: raw empresa data retrieved", empresaData);
+
         const transformedData = {
-          // ... (O restante da sua lógica de mapeamento permanece a mesma)
-          // Story 4 - Interações do Ano
           interactions: {
             mensagensTrocadas: empresaData?.total_msgs || 0,
             audiosEnviados: empresaData?.audio_enviado || 0,
@@ -70,25 +69,23 @@ const useFetchEmpresaData = (customer_id?: number) => {
             chatsIniciadosDisparador: empresaData?.disparo || 0,
           },
 
-          // Story 6 - Velocidade de Atendimento
           speed: {
             audiosRecebidos: empresaData?.audio_recebido || 0,
             chatsReceptivos: empresaData?.chats || 0,
             minutosEmLigacao: empresaData?.receptive_msgs || 0,
           },
-          // Story 8 - Ranking Chats
           userYourself: {
             userName: userData?.name || 0,
             userChats: userData?.chats || 0,
           },
 
-          // Story 9 - Ranking tempo conectado
           userLogs: {
             userName: userData?.name || 0,
             userLogs: userData?.logs || 0,
           },
         };
 
+        console.log("[BACK] useFetchEmpresaData: transformed data", transformedData);
         setClientData(transformedData);
 
       } catch (err) {

@@ -29,6 +29,7 @@ const useFetchUserData = (user_id?: number) => {
         setLoading(false);
         return;
       }
+      console.log("[BACK] useFetchUserData: start fetch for user_id", user_id);
       setLoading(true);
       setError(null);
 
@@ -51,27 +52,26 @@ const useFetchUserData = (user_id?: number) => {
         const userData = userDataArray; // Se .single() for usado e retornar dado
 
         if (!userData) {
-          // Se a busca com .single() retornar null, o dado não foi encontrado
+          console.warn("[BACK] useFetchUserData: no user data returned for id", user_id);
           throw new Error("Nenhum dado do usuário encontrado com o ID fornecido.");
         }
 
+        console.log("[BACK] useFetchUserData: raw user data retrieved", userData);
+
         // 3. TRANSFORMAÇÃO DE DADOS (USANDO SUAS COLUNAS DO SUPABASE)
-        // O restante da sua lógica de mapeamento permanece a mesma
         const transformedData = {
-          // ... (O restante da sua lógica de mapeamento permanece a mesma)
-          // Story 8 - Ranking Chats
           userYourself: {
             userName: userData?.name || 0,
             userChats: userData?.chats || 0,
             userMedia: userData?.media || 0,
-
           },
         };
 
+        console.log("[BACK] useFetchUserData: transformed data", transformedData);
         setClientData(transformedData);
 
       } catch (err) {
-        // Captura erros do Supabase (console.error removido para produção)
+        console.error("[BACK] useFetchUserData: error", err);
         setError(err.message || "Ocorreu um erro ao conectar com o Supabase.");
         setClientData(null);
       } finally {
