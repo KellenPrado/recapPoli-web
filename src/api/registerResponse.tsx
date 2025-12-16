@@ -16,7 +16,7 @@ export async function hasSeen(
   userId: number | null
 ): Promise<boolean> {
   console.log ("identificação recap",customerId, userId);
-  if (!customerId || !userId) return false;
+if (customerId == null || userId == null) return false;
 
   const { data, error } = await supabase
     .from("register")
@@ -61,17 +61,17 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async () => {
   const alreadySeen = await hasSeen(customerId, userId);
 
   if (alreadySeen) {
-    console.log("[WIDGET] Usuário já viu — não exibindo");
+    console.log("[WIDGET] Usuário já viu — não abrindo");
     return;
   }
 
-  // Marca como visto imediatamente após abrir
+  console.log("[WIDGET] Primeira visualização — abrindo widget");
+
+  // 👉 ABRE O WIDGET
+  widget.setAttribute("open", "true");
+  // ou widget.open();
+
+  // 👉 MARCA COMO VISTO
   await markAsSeen(customerId, userId);
 });
 
-/* =====================================================
-   BLOQUEIA MENSAGENS EXTERNAS NÃO CONFIÁVEIS
-===================================================== */
-window.addEventListener("message", (event) => {
-  if (event.origin !== ORIGEM_CONFIAVEL) return;
-});
