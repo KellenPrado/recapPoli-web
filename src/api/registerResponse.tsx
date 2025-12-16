@@ -72,16 +72,11 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async () => {
 
   console.log("[WIDGET] Primeira visualização — abrindo widget");
 
-  // 👉 TENTA ABRIR O WIDGET
-  try {
-    widget.open = true; // Propriedade (recomendado para Web Components)
-    // Alternativa se não funcionar acima:
-    // widget.setAttribute("open", "true");
-  } catch (err) {
-    console.error("[WIDGET] Erro ao abrir:", err);
-  }
+  // 👉 DISPARA O EVENTO CORRETO QUE O COMPONENTE ESCUTA
+  window.dispatchEvent(new Event("RECAP_POLI_OPENED"));
+  console.log("[WIDGET] Evento RECAP_POLI_OPENED disparado");
 
-  // 👉 MARCA COMO VISTO APÓS ABRIR
+  // 👉 MARCA COMO VISTO
   await markAsSeen(customerId, userId);
   console.log("[WIDGET] Marcado como visto no banco");
 });
