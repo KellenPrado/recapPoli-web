@@ -114,12 +114,10 @@ window.addEventListener("message", async (event) => {
   const data = event.data;
 
   if (!data) {
-    console.warn("[BACK][message] data vazia");
     return;
   }
 
   if (!data.type) {
-    console.warn("[BACK][message] sem type, ignorando", data);
     return;
   }
 
