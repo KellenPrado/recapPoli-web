@@ -30,6 +30,7 @@ const Widget = ({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    console.log("-------------ENTROU NO USEEFFECT -------------");
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
@@ -47,6 +48,9 @@ const Widget = ({
       window.removeEventListener("RECAP_POLI_CLOSE", handleClose);
     };
   }, []);
+
+  console.log("isOpen:", isOpen);
+  console.log("-------------SAIU DO USEEFFECT -------------");
 
   const backdrop = isOpen
     ? createPortal(
