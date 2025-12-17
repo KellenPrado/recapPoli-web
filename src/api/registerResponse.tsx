@@ -56,7 +56,6 @@ async function markAsSeen(customerId: number, userId: number) {
       {
         customer_id: customerId,
         user_id: userId,
-        views: false,
         created_at: new Date().toISOString(),
       },
       { onConflict: "customer_id,user_id" }
@@ -143,7 +142,6 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
           quiz_chats: false,
           quiz_activeMsg: false,
           feedback: false,
-          views: false,
 
         };
         break;
@@ -157,12 +155,15 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
           quiz_chats: true,
           quiz_activeMsg: !!data.quizActive,
           feedback: false,
-          views: false,
         };
         break;
 
       case "RETROSPECTIVE_FEEDBACK_VIEW":
-        await markAsSeen(customerId, userId);
+        payload = {
+          customer_id: customerId,
+          user_id: userId,
+          views: true,
+        };
         console.log("[BACK] Marcado como visto no banco");
         break;
 
@@ -175,7 +176,6 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
           quiz_chats: false,
           quiz_activeMsg: false,
           feedback: true,
-          views: true,
         };
 
         break;
