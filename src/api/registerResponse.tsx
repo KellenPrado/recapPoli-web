@@ -56,7 +56,7 @@ async function markAsSeen(customerId: number, userId: number) {
       {
         customer_id: customerId,
         user_id: userId,
-        views: true,
+        views: false,
         created_at: new Date().toISOString(),
       },
       { onConflict: "customer_id,user_id" }
@@ -103,96 +103,103 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
   window.dispatchEvent(new Event("RECAP_POLI_OPENED"));
   console.log("[BACK] Evento RECAP_POLI_OPENED disparado");
 
-  // 👉 MARCA COMO VISTO
-  await markAsSeen(customerId, userId);
-  console.log("[BACK] Marcado como visto no banco");
 
   /* =====================================================
    LOG E REGISTRO DE EVENTOS DO WIDGET
 ===================================================== */
-window.addEventListener("message", async (event) => {
-  const data = event.data;
+  window.addEventListener("message", async (event) => {
+    const data = event.data;
 
-  if (!data) {
-    return;
-  }
-
-  if (!data.type) {
-    return;
-  }
-
-  const customerId = data.customerId ?? data.customer_id ?? null;
-  const userId = data.userId ?? data.user_id ?? null;
-
-  console.log("[BACK][message] ids normalizados", {
-    customerId,
-    userId,
-  });
-
-  if (customerId == null || userId == null) {
-    console.warn("[BACK][message] ids inválidos, abortando");
-    return;
-  }
-
-  let payload: any = null;
-
-  switch (data.type) {
-    case "RETROSPECTIVE_OPENED":
-      console.log("[BACK][message] evento OPENED");
-      payload = {
-        customer_id: customerId,
-        user_id: userId,
-        created_at: data.openedAt || new Date().toISOString(),
-        quiz_chats: false,
-        quiz_activeMsg: false,
-        feedback: false,
-        
-      };
-      break;
-
-    case "RETROSPECTIVE_QUIZ_ANSWER":
-      console.log("[BACK][message] evento QUIZ_ANSWER", data);
-      payload = {
-        customer_id: customerId,
-        user_id: userId,
-        created_at: data.answeredAt || new Date().toISOString(),
-        quiz_chats: true,
-        quiz_activeMsg: !!data.quizActive,
-        feedback: false,
-      };
-      break;
-
-    case "RETROSPECTIVE_FEEDBACK":
-      console.log("[BACK][message] evento FEEDBACK", data);
-      payload = {
-        customer_id: customerId,
-        user_id: userId,
-        created_at: data.feedbackAt || new Date().toISOString(),
-        quiz_chats: false,
-        quiz_activeMsg: false,
-        feedback: true,
-      };
-      break;
-
-    default:
-      console.warn("[BACK][message] tipo desconhecido", data.type);
+    if (!data) {
       return;
-  }
-
-  console.log("[BACK][message] payload final", payload);
-
-  try {
-    console.log("[BACK][supabase] inserindo evento");
-    const { error } = await supabase.from("register").upsert([payload]);
-
-    if (error) {
-      console.error("[BACK][supabase] erro ao inserir", error);
-    } else {
-      console.log("[BACK][supabase] evento inserido com sucesso");
     }
-  } catch (err) {
-    console.error("[BACK][supabase] erro inesperado", err);
-  }
-});
+
+    if (!data.type) {
+      return;
+    }
+
+    const customerId = data.customerId ?? data.customer_id ?? null;
+    const userId = data.userId ?? data.user_id ?? null;
+
+    console.log("[BACK][message] ids normalizados", {
+      customerId,
+      userId,
+    });
+
+    if (customerId == null || userId == null) {
+      console.warn("[BACK][message] ids inválidos, abortando");
+      return;
+    }
+
+    let payload: any = null;
+
+    switch (data.type) {
+      case "RETROSPECTIVE_OPENED":
+        console.log("[BACK][message] evento OPENED");
+        payload = {
+          customer_id: customerId,
+          user_id: userId,
+          created_at: data.openedAt || new Date().toISOString(),
+          quiz_chats: false,
+          quiz_activeMsg: false,
+          feedback: false,
+          views: false,
+
+        };
+        break;
+
+      case "RETROSPECTIVE_QUIZ_ANSWER":
+        console.log("[BACK][message] evento QUIZ_ANSWER", data);
+        payload = {
+          customer_id: customerId,
+          user_id: userId,
+          created_at: data.answeredAt || new Date().toISOString(),
+          quiz_chats: true,
+          quiz_activeMsg: !!data.quizActive,
+          feedback: false,
+          views: false,
+        };
+        break;
+
+      case "RETROSPECTIVE_FEEDBACK_VIEW":
+        await markAsSeen(customerId, userId);
+        console.log("[BACK] Marcado como visto no banco");
+        break;
+
+      case "RETROSPECTIVE_FEEDBACK":
+        console.log("[BACK][message] evento FEEDBACK", data);
+        payload = {
+          customer_id: customerId,
+          user_id: userId,
+          created_at: data.feedbackAt || new Date().toISOString(),
+          quiz_chats: false,
+          quiz_activeMsg: false,
+          feedback: true,
+          views: true,
+        };
+
+        break;
+
+
+      default:
+        console.warn("[BACK][message] tipo desconhecido", data.type);
+        return;
+    }
+
+    console.log("[BACK][message] payload final", payload);
+
+    try {
+      console.log("[BACK][supabase] inserindo evento");
+      const { error } = await supabase.from("register").upsert([payload]);
+
+      if (error) {
+        console.error("[BACK][supabase] erro ao inserir", error);
+      } else {
+        console.log("[BACK][supabase] evento inserido com sucesso");
+      }
+    } catch (err) {
+      console.error("[BACK][supabase] erro inesperado", err);
+    }
+  });
 
 });
