@@ -21,7 +21,6 @@ const saveFeedback = (liked: boolean, id?: number, userId?: number) => {
     "*",
   );
 
-  console.log("[WIDGET] feedback enviado:", liked ? "Gostou" : "Não gostou");
 };
 
 const StoryFeedback = ({ id, userId }: StoryFeedbackProps) => {
@@ -41,7 +40,6 @@ const StoryFeedback = ({ id, userId }: StoryFeedbackProps) => {
       "*",
     );
 
-    console.log("[WIDGET] último slide (feedback) visualizado");
   }, [id, userId]);
 
   const handleSelect = (choice: "up" | "down") => {

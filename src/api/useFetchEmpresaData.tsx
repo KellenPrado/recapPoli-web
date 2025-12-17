@@ -29,7 +29,6 @@ const useFetchEmpresaData = (customer_id?: number) => {
         setLoading(false);
         return;
       }
-      console.log("[BACK] useFetchEmpresaData: start fetch for customer_id", customer_id);
       setLoading(true);
       setError(null);
 
@@ -58,7 +57,6 @@ const useFetchEmpresaData = (customer_id?: number) => {
           throw new Error("Nenhum dado da empresa encontrado com o ID fornecido.");
         }
 
-        console.log("[BACK] useFetchEmpresaData: raw empresa data retrieved", empresaData);
 
         const transformedData = {
           interactions: {
@@ -85,7 +83,6 @@ const useFetchEmpresaData = (customer_id?: number) => {
           },
         };
 
-        console.log("[BACK] useFetchEmpresaData: transformed data", transformedData);
         setClientData(transformedData);
 
       } catch (err) {

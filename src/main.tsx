@@ -22,15 +22,12 @@ const Widget = ({
   "customer-id"?: string;
   "user-id"?: string;
 }) => {
-  console.log("Início do Widget (main.tsx)", customerId, userId);
   const parsedCustomerId = customerId ? Number(customerId) : undefined;
   const parsedUserId = userId ? Number(userId) : undefined;
-  console.log("parsed:", parsedCustomerId, parsedUserId);
 
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    console.log("-------------ENTROU NO USEEFFECT -------------");
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
@@ -49,8 +46,6 @@ const Widget = ({
     };
   }, []);
 
-  console.log("isOpen:", isOpen);
-  console.log("-------------SAIU DO USEEFFECT -------------");
 
   const backdrop = isOpen
     ? createPortal(

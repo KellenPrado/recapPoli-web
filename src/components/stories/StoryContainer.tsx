@@ -43,7 +43,6 @@ interface StoryContainerProps {
 }
 
 const StoryContainer = ({ id, userId: propUserId }: StoryContainerProps) => {
-  console.log("StoryContainer component rendered", id, propUserId);
   const [currentStory, setCurrentStory] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);

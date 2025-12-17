@@ -13,15 +13,7 @@ export async function hasSeen(
   customerId: number | null,
   userId: number | null
 ): Promise<boolean> {
-  console.log("[BACK] hasSeen: start - checking Supabase for view flag", {
-    customerId,
-    userId,
-  });
 
-  if (customerId == null || userId == null) {
-    console.log("[BACK] hasSeen: missing ids, treating as not seen");
-    return false;
-  }
 
   const { data, error } = await supabase
     .from("register")
@@ -30,15 +22,8 @@ export async function hasSeen(
     .eq("user_id", userId)
     .maybeSingle();
 
-  if (error) {
-    console.warn("[BACK] hasSeen: supabase error", error);
-    return false;
-  }
-
-  console.log("[BACK] hasSeen: query result", { data });
 
   const seen = data?.views === true;
-  console.log("[BACK] hasSeen: computed seen =>", seen);
   return seen;
 }
 
@@ -46,10 +31,7 @@ export async function hasSeen(
    MARCA COMO VISTO
 ===================================================== */
 async function markAsSeen(customerId: number, userId: number) {
-  console.log("[BACK] markAsSeen: upserting record to mark as seen", {
-    customerId,
-    userId,
-  });
+
 
   try {
     const { data, error } = await supabase.from("register").upsert(
@@ -62,9 +44,9 @@ async function markAsSeen(customerId: number, userId: number) {
     );
 
     if (error) {
-      console.warn("[BACK] markAsSeen: supabase upsert error", error);
+      // removed console.warn per request
     } else {
-      console.log("[BACK] markAsSeen: upsert success", { data });
+      // removed console.log per request
     }
   } catch (err) {
     console.error("[BACK] markAsSeen: unexpected error", err);
@@ -76,7 +58,7 @@ async function markAsSeen(customerId: number, userId: number) {
 ===================================================== */
 window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
   const detail = (ev as CustomEvent)?.detail;
-  console.log("[BACK] RECAP_POLI_REQUEST_OPEN received", { detail });
+
 
   const widget = document.querySelector("recap-poli-widget") as any;
   if (!widget) {
@@ -87,20 +69,20 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
   const customerId = Number(widget.getAttribute("customer-id"));
   const userId = Number(widget.getAttribute("user-id"));
 
-  console.log("[BACK] Verificando se já foi visto:", { customerId, userId });
+
 
   const alreadySeen = await hasSeen(customerId, userId);
 
   if (alreadySeen) {
-    console.log("[BACK] decision: already seen => no open");
+
     return;
   }
 
-  console.log("[BACK] decision: not seen => will open widget now");
+
 
   // 👉 DISPARA O EVENTO CORRETO QUE O COMPONENTE ESCUTA
   window.dispatchEvent(new Event("RECAP_POLI_OPENED"));
-  console.log("[BACK] Evento RECAP_POLI_OPENED disparado");
+
 
 
   /* =====================================================
@@ -120,13 +102,9 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
     const customerId = data.customerId ?? data.customer_id ?? null;
     const userId = data.userId ?? data.user_id ?? null;
 
-    console.log("[BACK][message] ids normalizados", {
-      customerId,
-      userId,
-    });
+
 
     if (customerId == null || userId == null) {
-      console.warn("[BACK][message] ids inválidos, abortando");
       return;
     }
 
@@ -134,7 +112,7 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
 
     switch (data.type) {
       case "RETROSPECTIVE_OPENED":
-        console.log("[BACK][message] evento OPENED");
+
         payload = {
           customer_id: customerId,
           user_id: userId,
@@ -147,7 +125,7 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
         break;
 
       case "RETROSPECTIVE_QUIZ_ANSWER":
-        console.log("[BACK][message] evento QUIZ_ANSWER", data);
+
         payload = {
           customer_id: customerId,
           user_id: userId,
@@ -164,11 +142,17 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
           user_id: userId,
           views: true,
         };
-        console.log("[BACK] Marcado como visto no banco");
+      case "RETROSPECTIVE_FEEDBACK_VIEW":
+        payload = {
+          customer_id: customerId,
+          user_id: userId,
+          views: true,
+        };
+        console.log("Recap concluido! ");
         break;
 
       case "RETROSPECTIVE_FEEDBACK":
-        console.log("[BACK][message] evento FEEDBACK", data);
+
         payload = {
           customer_id: customerId,
           user_id: userId,
@@ -182,20 +166,18 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
 
 
       default:
-        console.warn("[BACK][message] tipo desconhecido", data.type);
         return;
     }
 
-    console.log("[BACK][message] payload final", payload);
+
 
     try {
-      console.log("[BACK][supabase] inserindo evento");
       const { error } = await supabase.from("register").upsert([payload]);
 
       if (error) {
         console.error("[BACK][supabase] erro ao inserir", error);
       } else {
-        console.log("[BACK][supabase] evento inserido com sucesso");
+
       }
     } catch (err) {
       console.error("[BACK][supabase] erro inesperado", err);

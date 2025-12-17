@@ -29,7 +29,6 @@ const useFetchUserData = (user_id?: number) => {
         setLoading(false);
         return;
       }
-      console.log("[BACK] useFetchUserData: start fetch for user_id", user_id);
       setLoading(true);
       setError(null);
 
@@ -56,8 +55,6 @@ const useFetchUserData = (user_id?: number) => {
           throw new Error("Nenhum dado do usuário encontrado com o ID fornecido.");
         }
 
-        console.log("[BACK] useFetchUserData: raw user data retrieved", userData);
-
         // 3. TRANSFORMAÇÃO DE DADOS (USANDO SUAS COLUNAS DO SUPABASE)
         const transformedData = {
           userYourself: {
@@ -67,7 +64,6 @@ const useFetchUserData = (user_id?: number) => {
           },
         };
 
-        console.log("[BACK] useFetchUserData: transformed data", transformedData);
         setClientData(transformedData);
 
       } catch (err) {

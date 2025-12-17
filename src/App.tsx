@@ -15,7 +15,6 @@ interface AppProps {
 }
 
 const App = ({ id, userId }: AppProps) => {
-  console.log("App component rendered", id, userId);
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
