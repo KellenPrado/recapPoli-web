@@ -110,65 +110,50 @@ window.addEventListener("RECAP_POLI_REQUEST_OPEN", async (ev: Event) => {
 
     let payload: any = null;
 
-    switch (data.type) {
-      case "RETROSPECTIVE_OPENED":
+ switch (data.type) {
+  case "RETROSPECTIVE_OPENED":
+    payload = {
+      customer_id: customerId,
+      user_id: userId,
+      created_at: data.openedAt || new Date().toISOString(),
+      quiz_chats: null,
+      quiz_activeMsg: null,
+      feedback: null,
+    };
+    break;
 
-        payload = {
-          customer_id: customerId,
-          user_id: userId,
-          created_at: data.openedAt || new Date().toISOString(),
-          quiz_chats: false,
-          quiz_activeMsg: false,
-          feedback: false,
+  case "RETROSPECTIVE_QUIZ_ANSWER":
+    payload = {
+      customer_id: customerId,
+      user_id: userId,
+      created_at: data.answeredAt || new Date().toISOString(),
+      quiz_chats: true,
+      quiz_activeMsg: !!data.quizActive,
+      feedback: null,
+    };
+    break;
 
-        };
-        break;
+  case "RETROSPECTIVE_FEEDBACK_VIEW":
+    payload = {
+      customer_id: customerId,
+      user_id: userId,
+      views: true,
+      // feedback continua null
+    };
+    break;
 
-      case "RETROSPECTIVE_QUIZ_ANSWER":
+  case "RETROSPECTIVE_FEEDBACK":
+    payload = {
+      customer_id: customerId,
+      user_id: userId,
+      created_at: data.feedbackAt || new Date().toISOString(),
+      feedback: data.liked === true ? true : false,
+    };
+    break;
 
-        payload = {
-          customer_id: customerId,
-          user_id: userId,
-          created_at: data.answeredAt || new Date().toISOString(),
-          quiz_chats: true,
-          quiz_activeMsg: !!data.quizActive,
-          feedback: false,
-        };
-        break;
-
-      case "RETROSPECTIVE_FEEDBACK_VIEW":
-        payload = {
-          customer_id: customerId,
-          user_id: userId,
-          views: true,
-        };
-      case "RETROSPECTIVE_FEEDBACK_VIEW":
-        payload = {
-          customer_id: customerId,
-          user_id: userId,
-          views: true,
-        };
-        console.log("Recap concluido! ");
-        break;
-
-      case "RETROSPECTIVE_FEEDBACK":
-
-        payload = {
-          customer_id: customerId,
-          user_id: userId,
-          created_at: data.feedbackAt || new Date().toISOString(),
-          quiz_chats: false,
-          quiz_activeMsg: false,
-          feedback: true,
-        };
-
-        break;
-
-
-      default:
-        return;
-    }
-
+  default:
+    return;
+}
 
 
     try {
